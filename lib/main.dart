@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gamify/screens/auth/login.dart';
+import 'package:gamify/screens/auth/onboarding.dart';
+import 'package:gamify/screens/auth/signup.dart';
 import 'package:get/get.dart';
 import 'screens/home_screen.dart';
 import 'screens/book_detail_screen.dart';
@@ -6,7 +9,7 @@ import 'screens/profile_screen.dart';
 import 'screens/favorites_screen.dart';
 
 void main() {
-  runApp( BookApp());
+  runApp(const BookApp());
 }
 
 class BookApp extends StatelessWidget {
@@ -27,8 +30,11 @@ class BookApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      initialRoute: '/',
+      initialRoute: '/welcome',
       getPages: [
+        GetPage(name: '/welcome', page: () => const WelcomeScreen()),
+        GetPage(name: '/login', page: () => const LoginScreen()),
+        GetPage(name: '/signup', page: () => const SignupScreen()),
         GetPage(name: '/', page: () => const HomeScreen()),
         GetPage(name: '/book-detail', page: () => const BookDetailScreen()),
         GetPage(name: '/profile', page: () => const ProfileScreen()),
