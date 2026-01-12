@@ -35,9 +35,8 @@ class BookCard extends StatelessWidget {
               decoration: BoxDecoration(
                 // color: _getColorFromHex(book.coverColor),
                 image: DecorationImage(
-                  image: NetworkImage(book.coverColor),
+                  image: NetworkImage(book.coverImageUrl ?? ''),
                   fit: BoxFit.cover,
-                  
                 ),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20),
@@ -61,39 +60,6 @@ class BookCard extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                       ],
-                    ),
-                  ),
-                  // Rating Badge
-                  Positioned(
-                    bottom: 8,
-                    left: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.star,
-                            size: 14,
-                            color: Color(0xFFFDB022),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            book.rating.toString(),
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF2D3142),
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
                   ),
                 ],

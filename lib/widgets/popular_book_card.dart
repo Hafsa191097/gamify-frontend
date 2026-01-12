@@ -23,7 +23,7 @@ class PopularBookCard extends StatelessWidget {
               height: 220,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(book.coverColor),
+                  image: NetworkImage(book.coverImageUrl ?? ''),
                   fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.circular(24),
@@ -72,7 +72,7 @@ class PopularBookCard extends StatelessWidget {
 
             // Author Name
             Text(
-              book.author,
+              book.description ?? '',
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,

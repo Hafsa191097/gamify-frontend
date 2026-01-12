@@ -2,18 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:gamify/screens/auth/login.dart';
 import 'package:gamify/screens/auth/onboarding.dart';
 import 'package:gamify/screens/auth/signup.dart';
+import 'package:gamify/screens/home_screen.dart';
+import 'package:gamify/screens/book_detail_screen.dart';
+import 'package:gamify/screens/profile_screen.dart';
+import 'package:gamify/screens/favorites_screen.dart';
+import 'package:gamify/services/token.dart';
 import 'package:get/get.dart';
-import 'screens/home_screen.dart';
-import 'screens/book_detail_screen.dart';
-import 'screens/profile_screen.dart';
-import 'screens/favorites_screen.dart';
 
 void main() {
-  runApp(const BookApp());
+  // ✅ Initialize TokenService (no init() needed)
+  Get.put(TokenService());
+
+  // ✅ Check if user is authenticated
+  final tokenService = Get.find<TokenService>();
+  final isAuthenticated = tokenService.isAuthenticated();
+
+  runApp(BookApp(isAuthenticated: isAuthenticated));
 }
 
 class BookApp extends StatelessWidget {
-  const BookApp({Key? key}) : super(key: key);
+  final bool isAuthenticated;
+
+  const BookApp({Key? key, required this.isAuthenticated}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +40,17 @@ class BookApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      initialRoute: '/welcome',
+      // ✅ Dynamic initial route based on authentication
+      initialRoute: isAuthenticated ? '/' : '/welcome',
       getPages: [
+        // Welcome screen - shown only first time (no token)
         GetPage(name: '/welcome', page: () => const WelcomeScreen()),
+
+        // Auth screens - for login/signup
         GetPage(name: '/login', page: () => const LoginScreen()),
         GetPage(name: '/signup', page: () => const SignupScreen()),
+
+        // Protected screens - require authentication
         GetPage(name: '/', page: () => const HomeScreen()),
         GetPage(name: '/book-detail', page: () => const BookDetailScreen()),
         GetPage(name: '/profile', page: () => const ProfileScreen()),

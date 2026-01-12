@@ -37,13 +37,6 @@ class HomeScreen extends StatelessWidget {
                       _buildTopBooksSection(controller),
 
                       const SizedBox(height: 40),
-
-                      // Popular Books Section
-                      _buildSectionHeaderWithViewAll('Popular Book'),
-                      const SizedBox(height: 20),
-                      _buildPopularBooksSection(controller),
-
-                      const SizedBox(height: 30),
                     ],
                   ),
                 ),
@@ -76,14 +69,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
 
-          // Actions
-          Row(
-            children: [
-              _buildIconButton(Icons.search, () {}),
-              const SizedBox(width: 12),
-              _buildIconButton(Icons.menu, () {}),
-            ],
-          ),
+          _buildIconButton(Icons.search, () {}),
         ],
       ),
     );

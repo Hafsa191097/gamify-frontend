@@ -3,7 +3,7 @@ import 'dart:convert';
 
 class ApiService {
   // ✅ CORRECT: Use your actual IP address
-  static const String baseUrl = 'http://192.168.110.254:8000';
+  static const String baseUrl = 'http://127.0.0.1:8000';
 
   static Future<Map<String, dynamic>> login({
     required String email,
@@ -13,7 +13,7 @@ class ApiService {
       final response = await http.post(
         Uri.parse('$baseUrl/auth/auth/login'),
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json',
         },
         body: jsonEncode({
@@ -119,8 +119,40 @@ class ApiService {
     }
   }
 
-  /// Logout endpoint (optional)
-  /// Endpoint: POST /auth/logout
+  static Future<Map<String, dynamic>> getBookDetails({
+    required int bookId,
+    String? token,
+  }) async {
+    try {
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
+
+      if (token != null && token.isNotEmpty) {
+        headers['Authorization'] = 'Bearer $token';
+      }
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/books/$bookId'),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': jsonDecode(response.body)};
+      } else if (response.statusCode == 404) {
+        return {'success': false, 'error': 'Book not found'};
+      } else {
+        return {
+          'success': false,
+          'error': 'Failed to load book. Status: ${response.statusCode}',
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'error': 'Network error: ${e.toString()}'};
+    }
+  }
+
   static Future<Map<String, dynamic>> logout({required String token}) async {
     try {
       final response = await http.post(

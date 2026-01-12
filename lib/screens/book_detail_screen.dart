@@ -91,7 +91,7 @@ class BookDetailScreen extends StatelessWidget {
                         height: 320,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage(book.coverColor),
+                            image: NetworkImage(book.coverImageUrl ?? ''),
                             fit: BoxFit.cover,
                           ),
                           borderRadius: BorderRadius.circular(24),

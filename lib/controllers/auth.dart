@@ -1,3 +1,4 @@
+import 'package:gamify/services/token.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -9,7 +10,16 @@ class AuthController extends GetxController {
   var errorMessage = ''.obs;
   var successMessage = ''.obs;
 
-  final String baseUrl = 'http://192.168.110.254:8000';
+  final String baseUrl = 'https://annett-stereoscopic-xavi.ngrok-free.dev';
+
+  // ✅ Use your existing TokenService
+  late TokenService _tokenService;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _tokenService = Get.find<TokenService>();
+  }
 
   Future<bool> login({required String email, required String password}) async {
     try {
@@ -22,7 +32,6 @@ class AuthController extends GetxController {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json',
         },
-        
         body: {
           'grant_type': '',
           'username': email,
@@ -35,9 +44,10 @@ class AuthController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        // Store token in secure storage (implement with secure_storage package)
         final token = data['access_token'];
-        Get.put<String>(token); // Store token for later use
+
+        // ✅ Save token using your TokenService (only saveToken)
+        await _tokenService.saveToken(token);
 
         successMessage.value = 'Login successful!';
         return true;
@@ -79,14 +89,16 @@ class AuthController extends GetxController {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json',
         },
-        // ✅ CORRECT: Use form-urlencoded, not JSON
         body: {'email': email, 'password': password, 'role': 'user'},
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final token = data['access_token'];
-        Get.put<String>(token); // Store token for later use
+
+        // ✅ Save token using your TokenService (only saveToken)
+        await _tokenService.saveToken(token);
+
         successMessage.value = 'Account created successfully!';
         return true;
       } else if (response.statusCode == 400) {
@@ -107,34 +119,41 @@ class AuthController extends GetxController {
     }
   }
 
+  // ✅ Logout method
+  Future<void> logout() async {
+    try {
+      await _tokenService.clearToken();
+      clearMessages();
+
+      // Navigate to login
+      Get.offAllNamed('/login');
+      print('✅ User logged out successfully');
+    } catch (e) {
+      print('❌ Error during logout: $e');
+      errorMessage.value = 'Logout failed: ${e.toString()}';
+    }
+  }
+
   void _parseValidationError(String responseBody) {
     try {
       final decoded = jsonDecode(responseBody);
 
-      // Check if detail exists
       if (decoded['detail'] != null) {
         final detail = decoded['detail'];
 
-        // Handle if detail is a list (array of validation errors)
         if (detail is List && detail.isNotEmpty) {
-          // Get the first error message
           final firstError = detail[0];
 
           if (firstError is Map && firstError['msg'] != null) {
             errorMessage.value = firstError['msg'] ?? 'Validation error';
           } else if (firstError is String) {
-            // If it's just a string error message
             errorMessage.value = firstError;
           } else {
             errorMessage.value = 'Validation error occurred';
           }
-        }
-        // Handle if detail is a string (single error message)
-        else if (detail is String) {
+        } else if (detail is String) {
           errorMessage.value = detail;
-        }
-        // Handle if detail is a map (single error object)
-        else if (detail is Map && detail['msg'] != null) {
+        } else if (detail is Map && detail['msg'] != null) {
           errorMessage.value = detail['msg'];
         } else {
           errorMessage.value = 'Validation error';
