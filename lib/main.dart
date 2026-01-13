@@ -3,7 +3,6 @@ import 'package:gamify/screens/auth/login.dart';
 import 'package:gamify/screens/auth/onboarding.dart';
 import 'package:gamify/screens/auth/signup.dart';
 import 'package:gamify/screens/home_screen.dart';
-import 'package:gamify/screens/book_detail_screen.dart';
 import 'package:gamify/screens/profile_screen.dart';
 import 'package:gamify/screens/favorites_screen.dart';
 import 'package:gamify/services/token.dart';
@@ -52,7 +51,7 @@ class BookApp extends StatelessWidget {
 
         // Protected screens - require authentication
         GetPage(name: '/', page: () => const HomeScreen()),
-        GetPage(name: '/book-detail', page: () => const BookDetailScreen()),
+        // GetPage(name: '/book-detail', page: () => const BookDetailScreen()),
         GetPage(name: '/profile', page: () => const ProfileScreen()),
         GetPage(name: '/favorites', page: () => const FavoritesScreen()),
       ],

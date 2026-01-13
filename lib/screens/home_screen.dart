@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/book_controller.dart';
 import '../widgets/book_card.dart';
-import '../widgets/popular_book_card.dart';
 import '../widgets/bottom_nav_bar.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -147,7 +146,7 @@ class HomeScreen extends StatelessWidget {
   Widget _buildTopBooksSection(BookController controller) {
     return Obx(
       () => SizedBox(
-        height: 230,
+        height: 210,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
@@ -158,27 +157,6 @@ class HomeScreen extends StatelessWidget {
                 right: index == controller.topBooks.length - 1 ? 0 : 20,
               ),
               child: BookCard(book: controller.topBooks[index]),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPopularBooksSection(BookController controller) {
-    return Obx(
-      () => SizedBox(
-        height: 280,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
-          itemCount: controller.popularBooks.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: EdgeInsets.only(
-                right: index == controller.popularBooks.length - 1 ? 0 : 20,
-              ),
-              child: PopularBookCard(book: controller.popularBooks[index]),
             );
           },
         ),

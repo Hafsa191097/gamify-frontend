@@ -110,20 +110,6 @@ class WelcomeScreen extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 24),
-
-                  // Continue as Guest
-                  TextButton(
-                    onPressed: () => Get.offAllNamed('/'),
-                    child: const Text(
-                      'Continue as a guest',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFFD1C4E9),
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
                 ],
               ),
 
