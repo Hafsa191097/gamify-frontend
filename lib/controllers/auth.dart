@@ -1,3 +1,4 @@
+import 'package:gamify/config.dart';
 import 'package:gamify/services/token.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -10,9 +11,8 @@ class AuthController extends GetxController {
   var errorMessage = ''.obs;
   var successMessage = ''.obs;
 
-  final String base_url = 'https://annett-stereoscopic-xavi.ngrok-free.dev';
+  late String base_url = EnvironmentConfig.baseUrl;
 
-  // ✅ Use your existing TokenService
   late TokenService _tokenService;
 
   @override
