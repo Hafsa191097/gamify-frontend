@@ -1,15 +1,14 @@
+import 'package:gamify/config.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ApiService {
-  // ✅ CORRECT: Use your actual IP address
-  static const String baseUrl = 'http://127.0.0.1:8000';
-
   static Future<Map<String, dynamic>> login({
     required String email,
     required String password,
   }) async {
     try {
+      late String baseUrl = EnvironmentConfig.baseUrl;
       final response = await http.post(
         Uri.parse('$baseUrl/auth/auth/login'),
         headers: {
@@ -49,8 +48,9 @@ class ApiService {
     required String password,
   }) async {
     try {
+      late String base_url = EnvironmentConfig.baseUrl;
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/auth/register'),
+        Uri.parse('$base_url/auth/auth/register'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -124,6 +124,7 @@ class ApiService {
     String? token,
   }) async {
     try {
+       late String base_url = EnvironmentConfig.baseUrl;
       final headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -134,7 +135,7 @@ class ApiService {
       }
 
       final response = await http.get(
-        Uri.parse('$baseUrl/books/$bookId'),
+        Uri.parse('$base_url/books/$bookId'),
         headers: headers,
       );
 
@@ -155,8 +156,9 @@ class ApiService {
 
   static Future<Map<String, dynamic>> logout({required String token}) async {
     try {
+       late String base_url = EnvironmentConfig.baseUrl;
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/logout'),
+        Uri.parse('$base_url/auth/logout'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -178,8 +180,9 @@ class ApiService {
     required String token,
   }) async {
     try {
+       late String base_url = EnvironmentConfig.baseUrl;
       final response = await http.get(
-        Uri.parse('$baseUrl/auth/verify'),
+        Uri.parse('$base_url/auth/verify'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -203,8 +206,9 @@ class ApiService {
     required String token,
   }) async {
     try {
+       late String base_url = EnvironmentConfig.baseUrl;
       final response = await http.get(
-        Uri.parse('$baseUrl/auth/me'),
+        Uri.parse('$base_url/auth/me'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',

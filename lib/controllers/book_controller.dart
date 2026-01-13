@@ -17,7 +17,7 @@ class BookController extends GetxController {
   var searchQuery = ''.obs;
   var selectedStatus = 'All'.obs;
 
-  final String baseUrl = 'https://annett-stereoscopic-xavi.ngrok-free.dev';
+  final String base_url = 'https://annett-stereoscopic-xavi.ngrok-free.dev';
 
   @override
   void onInit() {
@@ -35,7 +35,7 @@ class BookController extends GetxController {
       errorMessage.value = '';
 
       final response = await http.get(
-        Uri.parse('$baseUrl/books'),
+        Uri.parse('$base_url/books'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',

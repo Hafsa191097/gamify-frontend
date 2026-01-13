@@ -10,7 +10,7 @@ class AuthController extends GetxController {
   var errorMessage = ''.obs;
   var successMessage = ''.obs;
 
-  final String baseUrl = 'https://annett-stereoscopic-xavi.ngrok-free.dev';
+  final String base_url = 'https://annett-stereoscopic-xavi.ngrok-free.dev';
 
   // ✅ Use your existing TokenService
   late TokenService _tokenService;
@@ -27,7 +27,7 @@ class AuthController extends GetxController {
       errorMessage.value = '';
 
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/auth/login'),
+        Uri.parse('$base_url/auth/auth/login'),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json',
@@ -84,7 +84,7 @@ class AuthController extends GetxController {
       }
 
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/auth/register'),
+        Uri.parse('$base_url/auth/auth/register'),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json',

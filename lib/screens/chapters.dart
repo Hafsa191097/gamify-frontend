@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gamify/controllers/chapters.dart';
 import 'package:gamify/models/chapter.dart';
+import 'package:gamify/screens/chapter_details.dart';
 import 'package:get/get.dart';
 import '../models/book.dart';
 
@@ -13,7 +14,6 @@ class ChaptersListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ChaptersController controller = Get.put(ChaptersController());
 
-    // Load chapters when screen opens
     Future.microtask(() {
       controller.getBookWithChapters(bookId: book.id!);
     });
@@ -37,99 +37,109 @@ class ChaptersListScreen extends StatelessWidget {
         ),
         centerTitle: false,
       ),
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(
-            child: CircularProgressIndicator(color: Color(0xFF6659AA)),
-          );
-        }
+      body: Obx(
+        () {
+          if (controller.isLoading.value) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Color(0xFF6659AA),
+              ),
+            );
+          }
 
-        if (controller.errorMessage.value.isNotEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.error_outline,
-                  size: 64,
-                  color: Color(0xFFEA4335),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  controller.errorMessage.value,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Color(0xFF2D3142),
+          if (controller.errorMessage.value.isNotEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: Color(0xFFEA4335),
                   ),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    controller.getBookWithChapters(bookId: book.id!);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF6659AA),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
+                  const SizedBox(height: 16),
+                  Text(
+                    controller.errorMessage.value,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF2D3142),
                     ),
                   ),
-                  child: const Text(
-                    'Retry',
-                    style: TextStyle(color: Colors.white),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      controller.getBookWithChapters(bookId: book.id!);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF6659AA),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                    ),
+                    child: const Text(
+                      'Retry',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+            );
+          }
+
+          final bookDetail = controller.bookDetail.value;
+          if (bookDetail == null || bookDetail.chapters.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.library_books_outlined,
+                    size: 64,
+                    color: Color(0xFF9CA3AF),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'No chapters available',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF9CA3AF),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final sortedChapters = bookDetail.chapters
+            ..sort((a, b) => a.chapterNumber.compareTo(b.chapterNumber));
+
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            itemCount: sortedChapters.length,
+            itemBuilder: (context, index) {
+              final chapter = sortedChapters[index];
+              return _buildChapterCard(chapter, controller);
+            },
           );
-        }
-
-        final bookDetail = controller.bookDetail.value;
-        if (bookDetail == null || bookDetail.chapters.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.library_books_outlined,
-                  size: 64,
-                  color: Color(0xFF9CA3AF),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'No chapters available',
-                  style: TextStyle(fontSize: 16, color: Color(0xFF9CA3AF)),
-                ),
-              ],
-            ),
-          );
-        }
-
-        // Sort chapters by chapter_number
-        final sortedChapters = bookDetail.chapters
-          ..sort((a, b) => a.chapterNumber.compareTo(b.chapterNumber));
-
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          itemCount: sortedChapters.length,
-          itemBuilder: (context, index) {
-            final chapter = sortedChapters[index];
-            return _buildChapterCard(chapter, controller);
-          },
-        );
-      }),
+        },
+      ),
     );
   }
 
-  // Build chapter card
-  Widget _buildChapterCard(Chapter chapter, ChaptersController controller) {
+  Widget _buildChapterCard(
+    Chapter chapter,
+    ChaptersController controller,
+  ) {
     return GestureDetector(
       onTap: () {
-        // Navigate to chapter detail screen
-        Get.toNamed(
-          '/chapter-detail',
-          arguments: {'chapter': chapter, 'bookTitle': chapter.title},
+        // ✅ Navigate to chapter detail screen
+        Get.to(
+          () => ChapterDetailScreen(
+            chapterId: chapter.id,
+            chapterTitle: chapter.title,
+          ),
         );
       },
       child: Container(
@@ -149,11 +159,9 @@ class ChaptersListScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Chapter number and title
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Chapter number in circle
                 Container(
                   width: 40,
                   height: 40,
@@ -173,7 +181,6 @@ class ChaptersListScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                // Title
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,7 +201,6 @@ class ChaptersListScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            // Summary as subtitle
             Text(
               controller.getSummarySummary(chapter.summaryText),
               style: const TextStyle(
@@ -212,3 +218,4 @@ class ChaptersListScreen extends StatelessWidget {
     );
   }
 }
+

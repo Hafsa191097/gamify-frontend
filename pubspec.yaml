@@ -37,6 +37,8 @@ dependencies:
   get: ^4.6.6
   http: ^1.6.0
   flutter_secure_storage: ^10.0.0
+  webview_flutter: ^4.4.2
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +65,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - .env.dev
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

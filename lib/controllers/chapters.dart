@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ChaptersController extends GetxController {
-  final String baseUrl = 'https://annett-stereoscopic-xavi.ngrok-free.dev';
+  final String base_url = 'https://annett-stereoscopic-xavi.ngrok-free.dev';
 
   var isLoading = false.obs;
   var bookDetail = Rxn<BookDetail>();
@@ -19,7 +19,7 @@ class ChaptersController extends GetxController {
       final headers = ApiHeaders.getHeaders();
 
       final response = await http.get(
-        Uri.parse('$baseUrl/books/$bookId'),
+        Uri.parse('$base_url/books/$bookId'),
         headers: headers,
       );
 

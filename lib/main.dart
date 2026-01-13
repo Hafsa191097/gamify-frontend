@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamify/config.dart';
 import 'package:gamify/screens/auth/login.dart';
 import 'package:gamify/screens/auth/onboarding.dart';
 import 'package:gamify/screens/auth/signup.dart';
@@ -8,8 +9,11 @@ import 'package:gamify/screens/favorites_screen.dart';
 import 'package:gamify/services/token.dart';
 import 'package:get/get.dart';
 
-void main() {
-  // ✅ Initialize TokenService (no init() needed)
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EnvironmentConfig.load();
+  print('🌐 API Base URL: ${EnvironmentConfig.baseUrl}');
+  print('🔧 Environment: ${EnvironmentConfig.environment}');
   Get.put(TokenService());
 
   // ✅ Check if user is authenticated
